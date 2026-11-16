@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "网络代理",
+    "description": "在设置页新增「网络代理」分区：开关 DSH 的出站 HTTP(S) 代理、填写代理地址与 NO_PROXY，保存即对当前进程生效，同时写入 $DSH_HOME/.env，下次启动继续生效。"
+  }
+}

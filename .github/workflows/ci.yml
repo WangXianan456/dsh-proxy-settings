@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test
+      - name: Packed file list contains the bundle and its client half
+        shell: bash
+        run: |
+          node -e "
+            const { execFileSync } = require('node:child_process');
+            const out = execFileSync('npm', ['pack', '--dry-run', '--json'], { encoding: 'utf8' });
+            const files = JSON.parse(out)[0].files.map((f) => f.path);
+            for (const required of ['package.json', 'cordis.patch.yml', 'lib/index.js', 'lib/client.js', 'locale/en.json', 'locale/zh.json', 'icon.svg']) {
+              if (!files.includes(required)) throw new Error('packed file list is missing ' + required);
+            }
+            console.log('packed files:', files.length);
+          "

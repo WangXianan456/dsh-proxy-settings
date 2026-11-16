@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Network proxy",
+    "description": "Adds a Network proxy section to Settings: turn DSH's outbound HTTP(S) proxy on or off, set the address and NO_PROXY, apply the change to this process immediately, and persist it to $DSH_HOME/.env so the next start keeps it."
+  }
+}

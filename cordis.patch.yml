@@ -1,0 +1,6 @@
+# Bundle patch for dsh-proxy-settings: inserts the Host plugin row.
+# A profile that installs this bundle gets the row from here; the Browser half is
+# declared by package.json `dsh.client` and served at /plugins/dsh-proxy-settings/client.js.
+- insert:
+    - id: dsh-proxy-settings
+      name: 'dsh-proxy-settings'

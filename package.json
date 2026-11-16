@@ -1,0 +1,82 @@
+{
+  "name": "dsh-proxy-settings",
+  "version": "0.2.0",
+  "description": "Settings section for the DeepSeek Harness outbound HTTP(S) proxy: turn it on or off, set the address and NO_PROXY, apply it to the running process immediately, and persist it in $DSH_HOME/.env.",
+  "private": false,
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "YOUR_NAME"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings.git"
+  },
+  "homepage": "https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings#readme",
+  "bugs": {
+    "url": "https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "dsh-bundle",
+    "proxy",
+    "http-proxy",
+    "https-proxy",
+    "no-proxy",
+    "network",
+    "settings"
+  ],
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "icon": "icon.svg",
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "locale",
+    "icon.svg",
+    "docs",
+    "README.md",
+    "README.zh.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.12.0",
+    "dsh": ">=0.2.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-http-proxy": ">=0.2.0",
+    "@deepseek-ai/dsh-home-paths": ">=0.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-http-proxy": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-home-paths": {
+      "optional": true
+    }
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node --test",
+    "preflight": "node scripts/preflight.mjs"
+  }
+}
