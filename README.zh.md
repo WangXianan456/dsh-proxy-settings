@@ -1,5 +1,8 @@
 # dsh-proxy-settings
 
+[![ci](https://github.com/WangXianan456/dsh-proxy-settings/actions/workflows/ci.yml/badge.svg)](https://github.com/WangXianan456/dsh-proxy-settings/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（DSH）**设置页**加一个「网络代理」分区：
 开关出站 HTTP(S) 代理、填写代理地址与 `NO_PROXY`，保存后对当前进程**立即生效**，同时写入
 `$DSH_HOME/.env`，下次启动继续生效。
