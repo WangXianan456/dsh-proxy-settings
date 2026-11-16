@@ -61,6 +61,19 @@ test('package.json: every entry in files exists', () => {
   }
 });
 
+test('README pair: Chinese is the default file and both link to each other', () => {
+  const chinese = readFileSync(join(ROOT, 'README.md'), 'utf8');
+  const english = readFileSync(join(ROOT, 'README.en.md'), 'utf8');
+  const repo = 'https://github.com/WangXianan456/dsh-proxy-settings/blob/main';
+
+  assert.ok(chinese.includes(repo + '/README.en.md'), 'README.md must link README.en.md');
+  assert.ok(english.includes(repo + '/README.md'), 'README.en.md must link README.md');
+  assert.match(chinese, /\*\*简体中文\*\*/, 'README.md must mark Chinese as the current language');
+  assert.match(english, /\*\*English\*\*/, 'README.en.md must mark English as the current language');
+  assert.match(chinese, /[\u4e00-\u9fff]/, 'README.md is the Chinese document');
+  assert.ok(pkg.files.includes('README.md') && pkg.files.includes('README.en.md'));
+});
+
 test('locale resources: both baseline locales carry a title and a description', () => {
   for (const language of ['en', 'zh']) {
     const path = join(ROOT, 'locale', language + '.json');

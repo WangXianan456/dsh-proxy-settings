@@ -28,7 +28,7 @@ jobs:
             const packed = JSON.parse(text)[0];
             const files = packed.files.map((file) => file.path);
             const required = [
-              "package.json", "cordis.patch.yml", "README.md", "README.zh.md", "LICENSE",
+              "package.json", "cordis.patch.yml", "README.md", "README.en.md", "LICENSE",
               "lib/index.js", "lib/client.js", "locale/en.json", "locale/zh.json", "icon.svg",
             ];
             const missing = required.filter((name) => !files.includes(name));

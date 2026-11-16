@@ -21,7 +21,7 @@ The copyright line in `LICENSE` and the advisory link in `SECURITY.md` carry the
 
 ```sh
 npm run preflight   # placeholders, packaging rules, required files
-npm test            # 38 tests; the ones needing a real proxy library skip without one
+npm test            # 39 tests; the ones needing a real proxy library skip without one
 npm pack --dry-run  # the exact file list that will be published
 ```
 
@@ -91,7 +91,8 @@ if it belongs in DSH itself.
 ## 7. Later releases
 
 1. Bump `version` (`npm version patch|minor|major`).
-2. Update the compatibility table in both READMEs if DSH requirements changed.
+2. Update the compatibility table in both READMEs (`README.md` is Chinese, `README.en.md` is
+   English) if DSH requirements changed.
 3. `npm run preflight && npm test && npm publish`.
 4. If you host a market index, add the new version there.
 

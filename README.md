@@ -1,141 +1,122 @@
 # dsh-proxy-settings
 
 [![ci](https://github.com/WangXianan456/dsh-proxy-settings/actions/workflows/ci.yml/badge.svg)](https://github.com/WangXianan456/dsh-proxy-settings/actions/workflows/ci.yml)
-[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/WangXianan456/dsh-proxy-settings/blob/main/LICENSE)
 
-A network proxy section for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) **Settings**:
-switch the outbound HTTP(S) proxy on or off, set its address and `NO_PROXY`, apply it to the
-running process immediately, and persist it to `$DSH_HOME/.env` so the next start keeps it.
+**简体中文** · [English](https://github.com/WangXianan456/dsh-proxy-settings/blob/main/README.en.md)
 
-![The Network proxy section in DSH Settings: the switch, the proxy address, NO_PROXY, and the live state of the layer this process uses](docs/screenshot.png)
+给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（DSH）**设置页**加一个「网络代理」分区：
+开关出站 HTTP(S) 代理、填写代理地址与 `NO_PROXY`，保存后对当前进程**立即生效**，同时写入
+`$DSH_HOME/.env`，下次启动继续生效。
 
-*Running in DSH: **Settings → Network proxy**. Saving applies the route to the running process
-and writes it to `$DSH_HOME/.env`.*
+![DSH 设置页里的「网络代理」分区：开关、代理地址、NO_PROXY，以及当前进程实际生效的层](https://raw.githubusercontent.com/WangXianan456/dsh-proxy-settings/main/docs/screenshot.png)
 
-This is an independent, unofficial plugin. It uses the proxy library DSH already ships
-(`@deepseek-ai/dsh-http-proxy`) and adds the settings surface on top of it; it is not part of
-DSH and not provided by DeepSeek.
+*实际运行效果：**设置 → 网络代理**。保存后立即对当前进程生效，并写入 `$DSH_HOME/.env`。*
 
-## What it does
+这是一个独立的第三方插件，不属于 DSH，也不由 DeepSeek 提供。它用的是 DSH 已经自带的代理库
+（`@deepseek-ai/dsh-http-proxy`），只在上面补了设置界面这一层。
 
-- Adds **Settings → Network proxy** with one switch, the proxy address, and `NO_PROXY`.
-- **Applies immediately.** Saving installs a new proxy policy on top of the one the launcher
-  installed, so the model requests and tool requests in the current process take the new
-  route without a restart.
-- **Really turns the proxy off.** Switching it off installs a direct layer above the
-  launcher's proxy instead of only dropping this plugin's layer, so traffic goes direct until
-  you switch it back on.
-- **Persists it.** The four proxy names are written to `$DSH_HOME/.env` atomically, with a
-  one-time `.env.bak`; every other line in that file is preserved byte for byte.
-- **Shows the truth.** The section reports which layer is active, the route the proxy library
-  itself resolves for a sample URL, and any diagnostics the library emitted.
+## 它做什么
 
-## Install
+- 在**设置 → 网络代理**里提供一个开关、代理地址、`NO_PROXY` 三项。
+- **立即生效**：保存在启动器已装的那层代理之上再叠一层策略，当前进程里的模型请求与工具请求
+  无需重启即改走新路由。
+- **真的关掉**：关闭时在启动器的代理层之上叠一个直连层，而不是只撤掉自己那层，所以在你再次
+  打开之前流量确实走直连。
+- **持久化**：四个代理名原子写入 `$DSH_HOME/.env`，首次改动留一份 `.env.bak`；文件里其余每一行
+  都按字节保留。
+- **如实显示**：分区会显示当前生效的层、代理库自己解析出的示例路由，以及代理库给出的诊断。
 
-Requires DSH 0.2.0 or newer (the plugin declares `engines.dsh`).
+## 安装
 
-**From the GUI** — **Settings → Plugins → Add plugin**, then enter `dsh-proxy-settings`. The
-bundle is installed into the current profile and selected.
+需要 DSH 0.2.0 或更新版本（插件声明了 `engines.dsh`）。
 
-**From a session** — ask the agent to install the bundle `dsh-proxy-settings`, or call
-`plugin_manager` with `action: "install_bundle"` and `target: "dsh-proxy-settings"`.
+**在界面里装** —— **设置 → 插件 → 添加插件**，填 `dsh-proxy-settings`。它会装进当前 profile 并被选中。
 
-**From a checkout** (development) — `plugin_manager` `install_bundle` with the absolute
-directory of this repository as `target`. The profile then depends on the directory through a
-`link:`, so edits are picked up on reload.
+**在会话里装** —— 让 agent 安装 `dsh-proxy-settings` 这个 bundle，或调用 `plugin_manager`：
+`action: "install_bundle"`，`target: "dsh-proxy-settings"`。
 
-After installing, open a new session (or reload the page) and look for **Network proxy** in
-Settings. If the entry is missing, check **Settings → Plugins** for an installation or
-activation error.
+**从源码装（开发用）** —— `plugin_manager` 的 `install_bundle` 把本仓库的绝对目录作为 `target`。
+profile 会用 `link:` 依赖该目录，改动在重载后生效。
 
-## Use
+安装后新开一个会话（或刷新页面），在设置里应能看到**网络代理**。若没有，去**设置 → 插件**看安装或
+激活是否报错。
 
-1. Turn **Enable HTTP(S) proxy** on.
-2. Enter an address such as `http://127.0.0.1:7890`. Only `http://` and `https://` are
-   accepted; the proxy layer DSH ships does not support SOCKS, and the section says so
-   instead of writing a value that would be ignored.
-3. Optionally set `NO_PROXY`. Loopback is always direct, whatever you write.
-4. **Save and apply**. The section then shows the live layer, the resolved route for
-   `https://example.com/`, and where the configuration was written.
+## 使用
 
-To undo it, switch the proxy off and save: the proxy lines are removed from `.env` and the
-process goes direct immediately.
+1. 打开「启用 HTTP(S) 代理」。
+2. 填地址，例如 `http://127.0.0.1:7890`。只接受 `http://` 与 `https://`；DSH 自带的代理层不支持
+   SOCKS，这里会直接说明，而不是写一个会被忽略的值。
+3. 可选填 `NO_PROXY`。无论写什么，本机地址永远直连。
+4. 点「保存并立即生效」。之后分区会显示当前切换层、`https://example.com/` 的实际路由，以及配置
+   写到了哪里。
 
-## What it changes on your machine
+想撤销：把开关关掉再保存，`.env` 里的代理行会被移除，进程立即改回直连。
 
-| Path | What happens |
+## 它在你机器上改了什么
+
+| 路径 | 行为 |
 |---|---|
-| `$DSH_HOME/.env` | Only `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY`, `NO_PROXY` (any letter case) are read or written. Comments and unrelated lines are preserved; the write is atomic (temporary file + rename) and the file never gets a BOM. |
-| `$DSH_HOME/.env.bak` | A copy of the file as it was before the first write. Created once, never overwritten. |
-| The running process | A proxy layer is installed on top of the launcher's. Uninstalling the plugin removes both layers. |
+| `$DSH_HOME/.env` | 只读写 `HTTP_PROXY`、`HTTPS_PROXY`、`ALL_PROXY`、`NO_PROXY`（任意大小写）。注释与无关行原样保留；写入是原子的（临时文件 + rename），且不带 BOM。 |
+| `$DSH_HOME/.env.bak` | 首次写入前的一份副本。只创建一次，不覆盖。 |
+| 运行中的进程 | 在启动器已有代理层之上再叠一层；卸载插件时两层一起撤掉。 |
 
-`$DSH_HOME` is resolved with `@deepseek-ai/dsh-home-paths` when the runtime provides it, and
-with the same rule (`$DSH_HOME`, then `~/.dsh`) otherwise.
+`$DSH_HOME` 优先用 `@deepseek-ai/dsh-home-paths` 解析；运行时不提供时按同一规则（`$DSH_HOME`，
+否则 `~/.dsh`）兜底。
 
-## How it works
+## 工作原理
 
-The plugin holds two layers over the launcher's own proxy policy:
+插件在启动器的代理策略之上持有两层：
 
-1. At activation it **adopts** the policy already in the process environment, so a later
-   "off" can cover it.
-2. **On** installs `installProxyFromEnvironment` with the proxy names from your configuration;
-   **off** installs it with an empty environment, which resolves to a direct policy and
-   installs a direct agent over the outer proxy.
-3. On unload it disposes its layer, then the adopted one, returning the process to the
-   launcher.
+1. 激活时**接管**进程环境里已有的策略，这样之后点「关闭」才能盖住它。
+2. **开启**时用你配置的代理名调用 `installProxyFromEnvironment`；**关闭**时用空环境调用，它会解析成
+   直连策略并在外层代理之上装一个直连 agent。
+3. 卸载时先撤掉自己这层，再撤掉接管层，把进程还给启动器。
 
-`fetch` in the Host process uses undici's global dispatcher, which is why the switch takes
-effect without a restart. Work that runs outside this process — including the worker threads
-DSH uses for generated code — does not inherit the policy; that is the library's design, not a
-gap in this plugin.
+宿主进程里的 `fetch` 走 undici 的全局 dispatcher，所以切换无需重启。进程之外的工作（包括 DSH 为
+生成代码使用的 worker 线程）不继承该策略——这是代理库的设计，不是本插件的缺口。
 
-The browser half is a plain classic script that registers one `settings.section` slot and its
-English and Chinese dictionaries, so the copy follows the GUI language.
+浏览器半侧是一个普通脚本，只注册一个 `settings.section` 插槽和它的中英文字典，所以文案跟随界面语言。
 
-## Security notes
+## 安全须知
 
-- The route lives on the loopback web server. It refuses a request whose `Origin` disagrees
-  with `Host`, refuses `Sec-Fetch-Site: cross-site`, and requires JSON for `POST`, so a page on
-  another origin cannot switch your proxy. A local process can already edit `.env` directly;
-  this is not a boundary against that.
-- A proxy address may contain credentials (`http://user:pass@host:port`). DSH stores the value
-  as written in `.env`, in plain text, and the section shows it in the field so you can edit
-  it. Use a proxy that does not need credentials, or accept that trade-off.
-- A proxy you point DSH at can read and modify everything DSH sends through it. Set this only
-  to an endpoint you trust.
-- See [SECURITY.md](SECURITY.md) for reporting a vulnerability.
+- 路由挂在回环地址的 Web 服务器上。它会拒绝 `Origin` 与 `Host` 不一致的请求、拒绝
+  `Sec-Fetch-Site: cross-site`，并要求 `POST` 使用 JSON，因此别的站点无法切换你的代理。本机进程本来
+  就能直接改 `.env`，这不是针对它的边界。
+- 代理地址可以带凭据（`http://user:pass@host:port`）。DSH 会按原样明文写进 `.env`，分区里也会显示
+  出来供你编辑。请用不需要凭据的代理，或接受这一取舍。
+- 你让 DSH 走的代理能看到并改动 DSH 经它发出的一切。只指向你信任的端点。
+- 漏洞报告方式见 [SECURITY.md](https://github.com/WangXianan456/dsh-proxy-settings/blob/main/SECURITY.md)。
 
-## Compatibility
+## 兼容性
 
 | | |
 |---|---|
-| DSH | `>=0.2.0` (`engines.dsh`). Rows, slots, and the proxy library this plugin relies on exist in that line. |
-| Node.js | `>=22.12.0` (`engines.node`). |
-| Host platforms | Windows, macOS, Linux. The code is plain Node; the integration tests run wherever a real `@deepseek-ai/dsh-http-proxy` is reachable. |
-| Languages | English and Chinese (`locale/en.json`, `locale/zh.json`, and the client dictionaries). |
+| DSH | `>=0.2.0`（`engines.dsh`）。插件依赖的行、插槽与代理库在该版本线内存在。 |
+| Node.js | `>=22.12.0`（`engines.node`）。 |
+| 宿主平台 | Windows、macOS、Linux。代码是纯 Node；集成测试在能找到真实 `@deepseek-ai/dsh-http-proxy` 的环境里运行。 |
+| 语言 | 英文与中文（`locale/en.json`、`locale/zh.json`，以及客户端字典）。 |
 
-## Development
+## 开发
 
 ```sh
-npm test          # unit + integration tests (node --test)
-npm run preflight # release checklist: placeholders, packaging, manifest rules
+npm test          # 单元 + 集成测试（node --test）
+npm run preflight # 发布前自检：占位符、打包、清单规则
 ```
 
-The integration tests use the real proxy library when they can find one: set
-`DSH_PROXY_SETTINGS_PROXY_LIB` to its `lib/index.js`, or point `DSH_HOME` at a Harness home
-that has one. Without a library those tests skip and the rest still run.
+集成测试会优先使用真实的代理库：把 `DSH_PROXY_SETTINGS_PROXY_LIB` 指向它的 `lib/index.js`，或把
+`DSH_HOME` 指向带有该库的 Harness home。找不到时这些用例跳过，其余照常运行。
 
-The plugin has no build step: `lib/client.js` is a hand-written classic script that consumes
-the platform `react` seed modules, and the Host half is plain ESM.
+本插件没有构建步骤：`lib/client.js` 是手写的普通脚本，消费平台提供的 `react` 种子模块；宿主半侧是
+普通 ESM。
 
-Releasing is described in [docs/PUBLISHING.md](docs/PUBLISHING.md).
+发布流程见 [docs/PUBLISHING.md](https://github.com/WangXianan456/dsh-proxy-settings/blob/main/docs/PUBLISHING.md)。
 
-## Uninstall
+## 卸载
 
-Remove the bundle from **Settings → Plugins**. The proxy configuration in `.env` is left
-alone, so DSH keeps using the proxy it was configured with; switch it off in the section
-before removing the plugin, or delete the four proxy lines from `.env` by hand.
+在**设置 → 插件**里移除本 bundle。`.env` 里的代理配置会保留，DSH 继续用你配好的代理；若想一并清掉，
+先在分区里关掉代理再移除插件，或手动删除 `.env` 里那四行代理名。
 
-## License
+## 许可证
 
-[MIT](LICENSE)
+[MIT](https://github.com/WangXianan456/dsh-proxy-settings/blob/main/LICENSE)

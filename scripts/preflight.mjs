@@ -43,7 +43,7 @@ if (pkg.engines?.dsh === undefined) warnings.push('package.json has no engines.d
 for (const entry of pkg.files ?? []) {
   if (!existsSync(join(ROOT, entry))) problems.push('package.json files entry does not exist: ' + entry);
 }
-for (const required of ['README.md', 'README.zh.md', 'LICENSE']) {
+for (const required of ['README.md', 'README.en.md', 'LICENSE']) {
   if (!existsSync(join(ROOT, required))) problems.push('missing ' + required);
 }
 
