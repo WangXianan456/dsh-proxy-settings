@@ -1,5 +1,6 @@
 node_modules/
 *.tgz
+packed.json
 npm-debug.log*
 .DS_Store
 Thumbs.db
