@@ -6,15 +6,15 @@
   "type": "module",
   "license": "MIT",
   "author": {
-    "name": "YOUR_NAME"
+    "name": "WangXianan"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings.git"
+    "url": "git+https://github.com/WangXianan456/dsh-proxy-settings.git"
   },
-  "homepage": "https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings#readme",
+  "homepage": "https://github.com/WangXianan456/dsh-proxy-settings#readme",
   "bugs": {
-    "url": "https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings/issues"
+    "url": "https://github.com/WangXianan456/dsh-proxy-settings/issues"
   },
   "keywords": [
     "deepseek-harness",

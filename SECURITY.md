@@ -8,7 +8,7 @@ version; the plugin keeps no configuration of its own beyond what it writes to
 
 ## Reporting a vulnerability
 
-Open a [private security advisory](https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings/security/advisories/new)
+Open a [private security advisory](https://github.com/WangXianan456/dsh-proxy-settings/security/advisories/new)
 or e-mail the maintainer instead of opening a public issue. Include the plugin version, the
 DSH version, the Host platform, and the steps that reproduce the problem. A first answer
 usually takes a few days.

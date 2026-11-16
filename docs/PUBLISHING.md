@@ -1,21 +1,21 @@
 # Publishing
 
-This repository is already shaped like a publishable DSH bundle. What is left is information
-about you, then two commands.
+This repository is already configured for `WangXianan456/dsh-proxy-settings` and is shaped like
+a publishable DSH bundle. What is left is the push and the npm publish.
 
-## 1. Fill in the placeholders
+## 1. Identity fields (already filled in)
 
-The checkout ships with placeholders so nothing accidentally publishes under the wrong name.
-Replace them in `package.json` (the same values appear in `SECURITY.md` and `LICENSE`):
+For the record, these are the fields that make the package publishable. Change them only if the
+repository or the maintainer changes:
 
 ```sh
-npm pkg set author.name="Your Name"
-npm pkg set repository.url="git+https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings.git"
-npm pkg set homepage="https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings#readme"
-npm pkg set bugs.url="https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings/issues"
+npm pkg set author.name="WangXianan"
+npm pkg set repository.url="git+https://github.com/WangXianan456/dsh-proxy-settings.git"
+npm pkg set homepage="https://github.com/WangXianan456/dsh-proxy-settings#readme"
+npm pkg set bugs.url="https://github.com/WangXianan456/dsh-proxy-settings/issues"
 ```
 
-Then edit the copyright line in `LICENSE` and the advisory link in `SECURITY.md`.
+The copyright line in `LICENSE` and the advisory link in `SECURITY.md` carry the same identity.
 
 ## 2. Check it
 
@@ -25,21 +25,20 @@ npm test            # 38 tests; the ones needing a real proxy library skip witho
 npm pack --dry-run  # the exact file list that will be published
 ```
 
-`npm run preflight` fails while any placeholder is left, while `private` is still `true`, and
-while a `files` entry points at nothing.
+`npm run preflight` fails while a field is still a placeholder, while `private` is still
+`true`, and while a `files` entry points at nothing.
 
-## 3. Put it on GitHub
+## 3. Push it
+
+The repository is initialized and has its first commit; add the remote and push:
 
 ```sh
-git init
-git add .
-git commit -m "dsh-proxy-settings 0.2.0: network proxy settings for DeepSeek Harness"
-git branch -M main
-git remote add origin https://github.com/YOUR_GITHUB_USER/dsh-proxy-settings.git
+git remote add origin https://github.com/WangXianan456/dsh-proxy-settings.git
 git push -u origin main
 ```
 
-Suggested repository topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `proxy`, `settings`.
+Suggested repository topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `dsh-bundle`, `proxy`,
+`settings`.
 
 A repository is useful on its own: DSH can install a bundle straight from a Git address
 pinned to a commit (`git+https://…#<commit>&path:/`), and the **Plugins** page can update a

@@ -4,7 +4,10 @@ A network proxy section for [DeepSeek Harness](https://github.com/deepseek-ai/de
 switch the outbound HTTP(S) proxy on or off, set its address and `NO_PROXY`, apply it to the
 running process immediately, and persist it to `$DSH_HOME/.env` so the next start keeps it.
 
-![A settings card with a proxy switch, an arrow to the network, and the .env file it writes](docs/preview.svg)
+![The Network proxy section in DSH Settings: the switch, the proxy address, NO_PROXY, and the live state of the layer this process uses](docs/screenshot.png)
+
+*Running in DSH: **Settings → Network proxy**. Saving applies the route to the running process
+and writes it to `$DSH_HOME/.env`.*
 
 This is an independent, unofficial plugin. It uses the proxy library DSH already ships
 (`@deepseek-ai/dsh-http-proxy`) and adds the settings surface on top of it; it is not part of

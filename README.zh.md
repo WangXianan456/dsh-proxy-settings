@@ -4,7 +4,9 @@
 开关出站 HTTP(S) 代理、填写代理地址与 `NO_PROXY`，保存后对当前进程**立即生效**，同时写入
 `$DSH_HOME/.env`，下次启动继续生效。
 
-![设置卡片里的代理开关、指向网络的箭头，以及它写入的 .env 文件](docs/preview.svg)
+![DSH 设置页里的「网络代理」分区：开关、代理地址、NO_PROXY，以及当前进程实际生效的层](docs/screenshot.png)
+
+*实际运行效果：**设置 → 网络代理**。保存后立即对当前进程生效，并写入 `$DSH_HOME/.env`。*
 
 这是一个独立的第三方插件，不属于 DSH，也不由 DeepSeek 提供。它用的是 DSH 已经自带的代理库
 （`@deepseek-ai/dsh-http-proxy`），只在上面补了设置界面这一层。
